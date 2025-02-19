@@ -15,7 +15,7 @@ void music_box_init(void)
 //	HAL_TIM_PWM_Start(&hpwmtim, TIM_CHANNEL_1);
 //	HAL_TIM_PWM_Start(&hpwmtim, TIM_CHANNEL_2);
 	STP_SetMotorPIDParams(&musicbox.motor, 0, 0.002, 0);
-	STP_SetMotorLimits(&musicbox.motor, 1000, -1000, 0.5, -0.5);
+	STP_SetMotorLimits(&musicbox.motor, 1000, -1000, 1, -1);
 #ifdef USE_GPIO_PORTS
 	STP_SetMotorPins(&musicbox.motor, GPIOA, GPIO_PIN_8, GPIO_PIN_9, GPIO_PIN_10, GPIO_PIN_11);	
 #endif
@@ -91,7 +91,7 @@ void music_box_main(void)
     {
       musicbox.freq = -SPEED_1_MOTOR_FREQ;
       musicbox.motor.hramp.pid_disable = 0;
-      musicbox.motor.hramp.pid.Ki = 0.05;
+      musicbox.motor.hramp.pid.Ki = 0.02;
       STP_SetMotorMode(&musicbox.motor, STP_MODE_HALF_STEP, 0);
     }
     else
@@ -105,7 +105,7 @@ void music_box_main(void)
   {
     musicbox.freq = SPEED_MAX_MOTOR_FREQ;
     musicbox.motor.hramp.pid_disable = 0;
-    musicbox.motor.hramp.pid.Ki = 0.005;
+    musicbox.motor.hramp.pid.Ki = 0.02;
     STP_SetMotorMode(&musicbox.motor, STP_MODE_HALF_STEP, 0);
   }
 	

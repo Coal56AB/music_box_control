@@ -1,6 +1,6 @@
 #include "menu_stuff.h"
 
-
+#define GPIO_CONTROL
 #define SPEED_SWITCH
 //#define SPEED_ANALOG
 
@@ -13,6 +13,12 @@ void Menu_Control_Init(PlayerTypeDef *player)
 	GPIO_Switch_Init(&player->SwSpeed, GPIO_SwSpeed, GPIO_Pin_SwSpeed, SW_ON);
 	GPIO_Switch_Init(&player->SwLoop, GPIO_SwLoop, GPIO_Pin_SwLoop, SW_ON);	
 	
+  player->SwPlay.Sw_FilterDelay = 70;
+  player->SwForward.Sw_FilterDelay = 70;
+  player->SwBackward.Sw_FilterDelay = 70;
+  player->SwSpeed.Sw_FilterDelay = 70;
+  player->SwLoop.Sw_FilterDelay = 70;
+  
 	player->speed = 1;
 }
 

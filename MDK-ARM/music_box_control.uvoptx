@@ -200,6 +200,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>period/4096/2,0x0A</ItemText>
         </Ww>
+        <Ww>
+          <count>10</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>menu_white_theme,0x0A</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>

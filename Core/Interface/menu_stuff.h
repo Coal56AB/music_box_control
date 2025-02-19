@@ -11,7 +11,7 @@
 
 #define font_size 				10 //refer to font_tahoma_8_prop
 
-#define displaycenter_x		(64)
+#define displaycenter_x		(62)
 #define displaycenter_y		(18)
 
 #define circle_stopplay_x_shift	(0)
@@ -57,12 +57,12 @@
 #define  speed_underline_x_rigth	(speed_underline_x_left+speed_x_width)
 #define  speed_underline_y				(speed_y_cursore+font_size)
 
-#define  loop_icon_x_shift	(speed_x_shift+2)
+#define  loop_icon_x_shift	(speed_x_shift+3)
 #define  loop_icon_y_shift	(-2)
 
 #define  loop_icon_x_start				(displaycenter_x-loop_icon_x_shift-loop_icon_width)
 #define  loop_icon_y_start				(displaycenter_y+loop_icon_y_shift)
-#define  loop_icon_width					(10)
+#define  loop_icon_width					(11)
 #define  loop_icon_height					8
 
 #define  selected_width           (1)

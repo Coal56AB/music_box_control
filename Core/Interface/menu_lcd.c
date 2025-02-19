@@ -30,7 +30,7 @@ void LCD_CreateFrame(PlayerTypeDef *player)
 		
 	
 	// дорожка песни
-	Graph_Draw_Line(oled_buf, 0, Graph_Height-1, player->currenttime*Graph_Width, Graph_Height-1, 1);
+	Graph_Draw_Line(oled_buf, 0, Graph_Height-2, player->currenttime*Graph_Width, Graph_Height-2, 1);
 	
 	
 	// перемотка вперед
@@ -79,6 +79,7 @@ void LCD_CreateFrame(PlayerTypeDef *player)
 void Graph_Draw_LoopIcon(uint8_t *Buffer_Frame, uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t pxColor)
 {
   #define arr_size 2
+  #define spot_width 2
     uint8_t r = (width < height ? width : height) / 4; // Радиус закруглений ограничен минимальным размером
 
     // Четыре дуги по углам
@@ -88,15 +89,15 @@ void Graph_Draw_LoopIcon(uint8_t *Buffer_Frame, uint8_t x, uint8_t y, uint8_t wi
     Graph_Draw_Arc(Buffer_Frame, x + width - r, y + height - r, r, 0, 90, pxColor); // Нижний правый угол
 
     // Прямые линии между дугами
-    Graph_Draw_Line(Buffer_Frame, x + r, y, x + width - r, y, pxColor);           // Верхняя горизонталь
+    Graph_Draw_Line(Buffer_Frame, x + r, y, x + width - r-spot_width, y, pxColor);           // Верхняя горизонталь
     Graph_Draw_Line(Buffer_Frame, x, y + r, x, y + height - r, pxColor);          // Левая вертикаль
-    Graph_Draw_Line(Buffer_Frame, x + r, y + height, x + width - r, y + height, pxColor); // Нижняя горизонталь
+    Graph_Draw_Line(Buffer_Frame, x + r+spot_width, y + height, x + width - r, y + height, pxColor); // Нижняя горизонталь
     Graph_Draw_Line(Buffer_Frame, x + width, y + r, x + width, y + height - r, pxColor); // Правая вертикаль
 
     // Стрелки
-    Graph_Draw_Line(Buffer_Frame, x + width - r, y, x + width - r - arr_size, y - arr_size, pxColor); // Верхняя стрелка
-    Graph_Draw_Line(Buffer_Frame, x + width - r, y, x + width - r - arr_size, y + arr_size, pxColor);
+    Graph_Draw_Line(Buffer_Frame, x + width - r-spot_width, y, x + width - r - arr_size-spot_width, y - arr_size, pxColor); // Верхняя стрелка
+    Graph_Draw_Line(Buffer_Frame, x + width - r-spot_width, y, x + width - r - arr_size-spot_width, y + arr_size, pxColor);
 
-    Graph_Draw_Line(Buffer_Frame, x + r, y + height, x + r + arr_size, y + height - arr_size, pxColor); // Нижняя стрелка
-    Graph_Draw_Line(Buffer_Frame, x + r, y + height, x + r + arr_size, y + height + arr_size, pxColor);
+    Graph_Draw_Line(Buffer_Frame, x + r+spot_width, y + height, x + r + arr_size+spot_width, y + height - arr_size, pxColor); // Нижняя стрелка
+    Graph_Draw_Line(Buffer_Frame, x + r+spot_width, y + height, x + r + arr_size+spot_width, y + height + arr_size, pxColor);
 }

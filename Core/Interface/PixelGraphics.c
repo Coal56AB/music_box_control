@@ -49,7 +49,7 @@ void Graph_Draw_Pixel(uint8_t *Buffer_Frame, uint8_t xPos, uint8_t yPos, uint8_t
 /* функция инверсии любой области в буфере кадра */
 void Graph_Inversion_Pos_Buffer_Frame(uint8_t *Buffer_Frame, uint16_t xPos_Start, uint16_t yPos_Start, uint16_t width, uint16_t height)
 {
-  if ((xPos_Start+width >= Graph_Width)||(xPos_Start < 0)||(yPos_Start+ height>= Graph_Height)||(yPos_Start < 0))
+  if ((xPos_Start+width > Graph_Width)||(xPos_Start < 0)||(yPos_Start+ height> Graph_Height)||(yPos_Start < 0))
 	{
 		//если значения по x и y больше пределов то выходим из функции
 		return;
