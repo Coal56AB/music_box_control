@@ -13,7 +13,7 @@
 
 /* переменные */
 
-uint8_t Buffer_Frame[128 * 32] 	= {0,0};	//буфер кадра
+//uint8_t Buffer_Frame[128 * 32] 	= {0,0};	//буфер кадра
 uint8_t chSpacing			= 0;		//межсимвольный интервал в px
 
 /* функция очистки буфера кадра */
@@ -420,8 +420,8 @@ void Graph_Invertsion_RectangleArea(uint8_t *Buffer_Frame, uint8_t xPos_Start, u
 	for (uint16_t y = yPos_Start; y < yPos_Start + rectangle_Height; y++)
 	{
 			// Вычислим начальный и конечный индекс для данной строки
-			uint16_t xStartPos = y * Graph_Width + xPos_Start;
-			uint16_t xEndPos = y * Graph_Width + xPos_Start + rectangle_Width;
+			uint16_t xStartPos = y * Graph_Width/8 + xPos_Start;
+			uint16_t xEndPos = y * Graph_Width/8 + xPos_Start + rectangle_Width;
 
 			// Инвертируем пиксели в данной строке
 			Graph_Inversion_Pos_Buffer_Frame(Buffer_Frame, xStartPos, xEndPos);

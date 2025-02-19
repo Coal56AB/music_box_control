@@ -32,4 +32,8 @@ music_box_control/main.o: ..\Core\Src\main.c ..\Core\Inc\main.h \
   ..\Drivers\CMSIS\DSP\Include\arm_math.h \
   E:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h \
   E:\Keil_v5\ARM\ARMCLANG\Bin\..\include\math.h ..\Core\Inc\i2c.h \
-  ..\Core\Inc\tim.h ..\Core\Inc\gpio.h
+  ..\Core\Inc\tim.h ..\Core\Inc\gpio.h ..\Core\Src\music_box_main.h \
+  ..\Core\Interface\menu_stuff.h ..\Core\Interface\PixelGraphics.h \
+  E:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdio.h \
+  ..\Core\Interface\oled.h ..\Core\Interface\general_gpio.h \
+  ..\Core\Interface\mylibs_defs.h ..\Core\Interface\mylibs_config.h

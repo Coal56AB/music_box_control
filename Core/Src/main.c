@@ -24,7 +24,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "music_box_main.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -56,8 +56,6 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-STP_MotorHandleTypeDef stpmotor1;
-float freq;
 /* USER CODE END 0 */
 
 /**
@@ -92,21 +90,7 @@ int main(void)
   MX_TIM1_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
-  extern void oled_demo_run();
-//  oled_demo_run();
-//	HAL_TIM_PWM_Start(&hpwmtim, TIM_CHANNEL_1);
-//	HAL_TIM_PWM_Start(&hpwmtim, TIM_CHANNEL_2);
-	STP_SetMotorPIDParams(&stpmotor1, 0, 0.002, 0);
-	STP_SetMotorLimits(&stpmotor1, 1000, -1000, 0.5, -0.5);
-#ifdef USE_GPIO_PORTS
-	STP_SetMotorPins(&stpmotor1, GPIOA, GPIO_PIN_8, GPIO_PIN_9, GPIO_PIN_10, GPIO_PIN_11);	
-#endif
-#ifdef USE_PWM_TIM
-	STP_SetMotorPins(&stpmotor1, &htim1, TIM_CHANNEL_1, TIM_CHANNEL_2, TIM_CHANNEL_3, TIM_CHANNEL_4);	
-#endif
-  STP_SetMotorMicrosteps(&stpmotor1, 8);
-	STP_MotorInit(&stpmotor1, &htim1, STP_MODE_FULL_STEP, 200);
-	STP_MotorStart(&stpmotor1);
+	music_box_init();
 //	HAL_TIM_Base_Start_IT(&htim1);
   /* USER CODE END 2 */
 
@@ -116,17 +100,7 @@ int main(void)
 
   while (1)
   {
-		STP_SetMotorFrequency(&stpmotor1, freq);
-//		if (freq > 0)
-//		{
-//			hpwmtim.Instance->CCR1 = (freq/1000)*hpwmtim.Instance->ARR;
-//			hpwmtim.Instance->CCR2 = 0;
-//		}
-//		else
-//		{
-//			hpwmtim.Instance->CCR1 = 0;
-//			hpwmtim.Instance->CCR2 = (-freq/1000)*hpwmtim.Instance->ARR;
-//		}
+		music_box_main();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

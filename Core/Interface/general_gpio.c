@@ -219,6 +219,10 @@ HAL_StatusTypeDef GPIO_Switch_Init(GPIO_SwitchTypeDef *sw, GPIO_TypeDef *GPIOx, 
   sw->Sw_Port       = GPIOx;
   sw->Sw_Pin        = GPIO_PIN_X;
   sw->Sw_ActiveLvl  = SW_ActiveLevel;
+	
+	if(sw->Sw_FilterDelay == 0)
+		sw->Sw_FilterDelay = 50;
+	
   return HAL_OK;
 }
 
@@ -234,6 +238,7 @@ uint8_t GPIO_Read_Swich(GPIO_SwitchTypeDef *sw)
   if(check_null_ptr_1(sw))
     return 0;
   
+	sw->Sw_GrandPrevState = sw->Sw_PrevState;
   if(HAL_GPIO_ReadPin(sw->Sw_Port, sw->Sw_Pin) == sw->Sw_ActiveLvl)
   {
     sw->Sw_PrevState = 1;

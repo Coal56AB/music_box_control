@@ -36,6 +36,7 @@ typedef struct
   uint8_t       Sw_ActiveLvl;
   uint32_t      Sw_PrevState;
   uint32_t      Sw_FilterDelay;
+  uint32_t      Sw_GrandPrevState;
   uint32_t      tickprev;
 }GPIO_SwitchTypeDef;
 

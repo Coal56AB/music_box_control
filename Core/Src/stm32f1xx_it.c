@@ -22,7 +22,7 @@
 #include "stm32f1xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "STPMotor.h"
+#include "music_box_main.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -184,7 +184,16 @@ void PendSV_Handler(void)
 void SysTick_Handler(void)
 {
   /* USER CODE BEGIN SysTick_IRQn 0 */
-
+	static uint32_t oled_prevtick = 0;
+	uint32_t oled_period = 100;
+	
+	Menu_Control(&musicbox.player);
+	
+	if(uwTick - oled_prevtick > oled_period)
+	{
+		oled_prevtick = uwTick;
+		LCD_CreateFrame(&musicbox.player);
+	}
   /* USER CODE END SysTick_IRQn 0 */
   HAL_IncTick();
   /* USER CODE BEGIN SysTick_IRQn 1 */
@@ -209,9 +218,8 @@ void TIM1_UP_IRQHandler(void)
   /* USER CODE END TIM1_UP_IRQn 0 */
   HAL_TIM_IRQHandler(&htim1);
   /* USER CODE BEGIN TIM1_UP_IRQn 1 */
-  extern STP_MotorHandleTypeDef stpmotor1;
   if((htim1.Instance->CR1 & TIM_CR1_DIR) == 0)
-    STP_MotorHandleTIM(&stpmotor1);
+    STP_MotorHandleTIM(&musicbox.motor);
   
   /* USER CODE END TIM1_UP_IRQn 1 */
 }

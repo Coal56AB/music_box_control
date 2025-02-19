@@ -1,5 +1,6 @@
-music_box_control/stm32f1xx_it.o: ..\Core\Src\stm32f1xx_it.c \
-  ..\Core\Inc\main.h ..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal.h \
+music_box_control/music_box_main.o: ..\Core\Src\music_box_main.c \
+  ..\Core\Src\music_box_main.h \
+  ..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal.h \
   ..\Core\Inc\stm32f1xx_hal_conf.h \
   ..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_rcc.h \
   ..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_def.h \
@@ -28,12 +29,11 @@ music_box_control/stm32f1xx_it.o: ..\Core\Src\stm32f1xx_it.c \
   ..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_pwr.h \
   ..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_tim.h \
   ..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_tim_ex.h \
-  ..\Core\StepperMotor\STPMotor.h \
+  ..\Core\Interface\menu_stuff.h ..\Core\Interface\PixelGraphics.h \
+  ..\Core\Inc\main.h ..\Core\StepperMotor\STPMotor.h \
   ..\Drivers\CMSIS\DSP\Include\arm_math.h \
   E:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h \
   E:\Keil_v5\ARM\ARMCLANG\Bin\..\include\math.h \
-  ..\Core\Inc\stm32f1xx_it.h ..\Core\Src\music_box_main.h \
-  ..\Core\Interface\menu_stuff.h ..\Core\Interface\PixelGraphics.h \
   E:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdio.h \
   ..\Core\Interface\oled.h ..\Core\Interface\general_gpio.h \
   ..\Core\Interface\mylibs_defs.h ..\Core\Interface\mylibs_config.h \

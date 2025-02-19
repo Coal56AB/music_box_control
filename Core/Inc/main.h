@@ -58,6 +58,16 @@ void Error_Handler(void);
 
 /* Private defines -----------------------------------------------------------*/
 #define hpwmtim htim1
+#define SW_LOOP_Pin GPIO_PIN_7
+#define SW_LOOP_GPIO_Port GPIOA
+#define SW_BACKWARD_Pin GPIO_PIN_0
+#define SW_BACKWARD_GPIO_Port GPIOB
+#define SW_PLAY_Pin GPIO_PIN_1
+#define SW_PLAY_GPIO_Port GPIOB
+#define SW_FORWARD_Pin GPIO_PIN_10
+#define SW_FORWARD_GPIO_Port GPIOB
+#define SW_SPEED_Pin GPIO_PIN_11
+#define SW_SPEED_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 

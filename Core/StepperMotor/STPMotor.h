@@ -19,11 +19,11 @@
  ((int)(_microstp_) == 64) || \
  ((int)(_microstp_) == 128))
 
-
 /** 
 	* @brief 	Handle for ramp.
 	*/
 typedef struct {
+	unsigned pid_disable;
 	unsigned pid_initialized;
 	/* Controller gains */
 	float setpoint;	/*!< Parameters of PID-regulator */
@@ -113,7 +113,8 @@ typedef struct
 
 
 HAL_StatusTypeDef STP_MotorStart(STP_MotorHandleTypeDef *motor);
-HAL_StatusTypeDef STP_MotorInit(STP_MotorHandleTypeDef *motor, TIM_HandleTypeDef *htim, STP_MotorModeTypeDef ControlMode, uint8_t totalSteps);
+HAL_StatusTypeDef STP_MotorInit(STP_MotorHandleTypeDef *motor, TIM_HandleTypeDef *htim, uint8_t totalSteps);
+HAL_StatusTypeDef STP_SetMotorMode(STP_MotorHandleTypeDef *motor, STP_MotorModeTypeDef ControlMode, uint8_t microsteps);
 HAL_StatusTypeDef STP_SetMotorMicrosteps(STP_MotorHandleTypeDef *motor, uint8_t microsteps);
 HAL_StatusTypeDef STP_SetMotorPIDParams(STP_MotorHandleTypeDef *motor, float Kp, float Ki, float Kd);
 HAL_StatusTypeDef STP_SetMotorLimits(STP_MotorHandleTypeDef *motor, float speedMax, float speedMin, float acceleration, float slowdown);

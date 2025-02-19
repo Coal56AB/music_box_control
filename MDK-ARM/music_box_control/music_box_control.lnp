@@ -1,5 +1,6 @@
 --cpu Cortex-M3
 "music_box_control\startup_stm32f103xb.o"
+"music_box_control\music_box_main.o"
 "music_box_control\main.o"
 "music_box_control\gpio.o"
 "music_box_control\i2c.o"

@@ -7,7 +7,7 @@ static uint16_t sequenceHalfStepSine[] = {0b0101, 0b0110, 0b1010, 0b1001};
 static float sin_table[128];
 
 
-HAL_StatusTypeDef STP_MotorInit(STP_MotorHandleTypeDef *motor, TIM_HandleTypeDef *htim, STP_MotorModeTypeDef ControlMode, uint8_t totalSteps)
+HAL_StatusTypeDef STP_MotorInit(STP_MotorHandleTypeDef *motor, TIM_HandleTypeDef *htim, uint8_t totalSteps)
 {
 	if(motor == NULL)
 		return HAL_ERROR;
@@ -15,42 +15,59 @@ HAL_StatusTypeDef STP_MotorInit(STP_MotorHandleTypeDef *motor, TIM_HandleTypeDef
 		return HAL_ERROR;
 	
 	motor->htim = htim;
-	motor->mode = ControlMode;
 	motor->rhandle.totalSteps = totalSteps;
   motor->rhandle.timarr = &htim->Instance->ARR;
   motor->rhandle.timcnt = &htim->Instance->CNT;
 
-	Service_SetMotorMode(motor);	
 	
 	return HAL_OK;
 }
 
+
+HAL_StatusTypeDef STP_SetMotorMode(STP_MotorHandleTypeDef *motor, STP_MotorModeTypeDef ControlMode, uint8_t microsteps)
+{
+	if(motor == NULL)
+		return HAL_ERROR;
+	
+	if(microsteps != 0)
+		STP_SetMotorMicrosteps(motor, microsteps);
+	else
+		motor->rhandle.microStepping = 0;
+	
+	motor->mode = ControlMode;
+
+	Service_SetMotorMode(motor);	
+  	
+  return HAL_OK;
+}
+
 HAL_StatusTypeDef STP_SetMotorMicrosteps(STP_MotorHandleTypeDef *motor, uint8_t microsteps)
 {
+	if(motor == NULL)
+		return HAL_ERROR;
   if(IS_MICROSTEP_VALID(microsteps) == 0)
     return HAL_ERROR;
   
   motor->rhandle.microStepping = microsteps;
-  
-  // Çàïîëíåíèå ïåðâîé ïîëîâèíû îò 0 äî 1
+  	
+  // Ð—Ð°Ð¿Ð¾Ð»Ð½ÐµÐ½Ð¸Ðµ Ð¿ÐµÑ€Ð²Ð¾Ð¹ Ð¿Ð¾Ð»Ð¾Ð²Ð¸Ð½Ñ‹ Ð¾Ñ‚ 0 Ð´Ð¾ 1
 	uint32_t half_steps = motor->rhandle.microStepping / 2;
 	for (int i = 0; i < half_steps; i++)
 	{
-		sin_table[i] = sin((i + 0.5) * (PI / 2) / half_steps); // Ïîëóâîëíà [0,1]
+		sin_table[i] = sin((i + 0.5) * (PI / 2) / half_steps); // ÐŸÐ¾Ð»ÑƒÐ²Ð¾Ð»Ð½Ð° [0,1]
 	}
 
-	// Çåðêàëüíîå êîïèðîâàíèå îò 1 äî 0
+	// Ð—ÐµÑ€ÐºÐ°Ð»ÑŒÐ½Ð¾Ðµ ÐºÐ¾Ð¿Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ðµ Ð¾Ñ‚ 1 Ð´Ð¾ 0
 	for (int i = 0; i < half_steps; i++)
 	{
 		sin_table[half_steps + i] = sin_table[half_steps - 1 - i];
 	}
   
-//  // Çàïîëíåíèå òàáëèöû ñèíóñîèäàëüíûõ êîýôôèöèåíòîâ
+//  // Ð—Ð°Ð¿Ð¾Ð»Ð½ÐµÐ½Ð¸Ðµ Ñ‚Ð°Ð±Ð»Ð¸Ñ†Ñ‹ ÑÐ¸Ð½ÑƒÑÐ¾Ð¸Ð´Ð°Ð»ÑŒÐ½Ñ‹Ñ… ÐºÐ¾ÑÑ„Ñ„Ð¸Ñ†Ð¸ÐµÐ½Ñ‚Ð¾Ð²
 //  for(int i = 0; i < motor->rhandle.microStepping; i++)
 //  {
-//		sin_table[i] = sin((i + 0.5) * (PI) / motor->rhandle.microStepping); // Ïîëóâîëíà [0,1]
+//		sin_table[i] = sin((i + 0.5) * (PI) / motor->rhandle.microStepping); // ÐŸÐ¾Ð»ÑƒÐ²Ð¾Ð»Ð½Ð° [0,1]
 //  }
-  
   
   return HAL_OK;
 }
@@ -207,26 +224,26 @@ HAL_StatusTypeDef STP_MotorMicroStep(STP_RotationHandleTypeDef *hrotor, GPIO_Typ
     high_time = (uint32_t)(sin_table[i-1] * microperiod);
     
     
-    // Âêëþ÷åíèå ñèãíàëà
+    // Ð’ÐºÐ»ÑŽÑ‡ÐµÐ½Ð¸Ðµ ÑÐ¸Ð³Ð½Ð°Ð»Ð°
     HAL_GPIO_WritePin(gpiox, gpio_pin, GPIO_PIN_SET);
     
-    // Îæèäàíèå êîíöà âûñîêîãî óðîâíÿ
+    // ÐžÐ¶Ð¸Ð´Ð°Ð½Ð¸Ðµ ÐºÐ¾Ð½Ñ†Ð° Ð²Ñ‹ÑÐ¾ÐºÐ¾Ð³Ð¾ ÑƒÑ€Ð¾Ð²Ð½Ñ
     while(*hrotor->timcnt < high_time + prevperiodtick)
 		{
-			if (*hrotor->timcnt < prev_tick) // Ïðîâåðêà íà ïåðåïîëíåíèå òàéìåðà
+			if (*hrotor->timcnt < prev_tick) // ÐŸÑ€Ð¾Ð²ÐµÑ€ÐºÐ° Ð½Ð° Ð¿ÐµÑ€ÐµÐ¿Ð¾Ð»Ð½ÐµÐ½Ð¸Ðµ Ñ‚Ð°Ð¹Ð¼ÐµÑ€Ð°
 				break;
 			prev_tick = *hrotor->timcnt;
 		}
     
-    // Âûêëþ÷åíèå ñèãíàëà
+    // Ð’Ñ‹ÐºÐ»ÑŽÑ‡ÐµÐ½Ð¸Ðµ ÑÐ¸Ð³Ð½Ð°Ð»Ð°
     HAL_GPIO_WritePin(gpiox, gpio_pin, GPIO_PIN_RESET);
     
-    // îæèäàíèå îêîí÷àíèÿ ïåðèîäà
+    // Ð¾Ð¶Ð¸Ð´Ð°Ð½Ð¸Ðµ Ð¾ÐºÐ¾Ð½Ñ‡Ð°Ð½Ð¸Ñ Ð¿ÐµÑ€Ð¸Ð¾Ð´Ð°
     while(*hrotor->timcnt < i*microperiod)
 		{
-			if (*hrotor->timarr <= i*microperiod) // Ïðîâåðêà íà ïåðåïîëíåíèå òàéìåðà
+			if (*hrotor->timarr <= i*microperiod) // ÐŸÑ€Ð¾Ð²ÐµÑ€ÐºÐ° Ð½Ð° Ð¿ÐµÑ€ÐµÐ¿Ð¾Ð»Ð½ÐµÐ½Ð¸Ðµ Ñ‚Ð°Ð¹Ð¼ÐµÑ€Ð°
 				return HAL_OK;
-			if (*hrotor->timcnt < prev_tick) // Ïðîâåðêà íà ïåðåïîëíåíèå òàéìåðà
+			if (*hrotor->timcnt < prev_tick) // ÐŸÑ€Ð¾Ð²ÐµÑ€ÐºÐ° Ð½Ð° Ð¿ÐµÑ€ÐµÐ¿Ð¾Ð»Ð½ÐµÐ½Ð¸Ðµ Ñ‚Ð°Ð¹Ð¼ÐµÑ€Ð°
 				break;
 			prev_tick = *hrotor->timcnt;
 		}
@@ -418,7 +435,7 @@ HAL_StatusTypeDef STP_MotorHandleTIM(STP_MotorHandleTypeDef *motor)
 	
 	Service_IsPIDInitialized(&motor->hramp);
   motor->hramp.SampleT = (float)(motor->htim->Instance->PSC+1)*(motor->htim->Instance->ARR+1)/SystemCoreClock;
-	if(motor->hramp.pid_initialized)
+	if(motor->hramp.pid_initialized && motor->hramp.pid_disable == 0)
 		Service_Ramp_ControlValue(&motor->hramp, &motor->frequency);
 	else
   {

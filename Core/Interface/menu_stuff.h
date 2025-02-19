@@ -4,6 +4,7 @@
 #include "stm32f1xx_hal.h"
 #include <PixelGraphics.h>
 #include "general_gpio.h"
+#include "main.h"
 
 #define font_size 				10 //refer to font_tahoma_8_prop
 
@@ -59,20 +60,20 @@
 
 
 
-#define GPIO_SwPlay							GPIOA
-#define GPIO_Pin_SwPlay					GPIO_PIN_1
+#define GPIO_SwSpeed						SW_SPEED_GPIO_Port
+#define GPIO_Pin_SwSpeed				SW_SPEED_Pin
 
-#define GPIO_SwForward					GPIOA
-#define GPIO_Pin_SwForward			GPIO_PIN_1
+#define GPIO_SwForward					SW_FORWARD_GPIO_Port
+#define GPIO_Pin_SwForward			SW_FORWARD_Pin
 
-#define GPIO_SwBackward					GPIOA
-#define GPIO_Pin_SwBackward			GPIO_PIN_1
+#define GPIO_SwPlay							SW_PLAY_GPIO_Port
+#define GPIO_Pin_SwPlay					SW_PLAY_Pin
 
-#define GPIO_SwSpeed						GPIOA
-#define GPIO_Pin_SwSpeed				GPIO_PIN_1
+#define GPIO_SwBackward					SW_BACKWARD_GPIO_Port
+#define GPIO_Pin_SwBackward			SW_BACKWARD_Pin
 
-#define GPIO_SwLoop							GPIOA
-#define GPIO_Pin_SwLoop					GPIO_PIN_1
+#define GPIO_SwLoop							SW_LOOP_GPIO_Port
+#define GPIO_Pin_SwLoop					SW_LOOP_Pin
 
 typedef struct
 {
@@ -91,8 +92,12 @@ typedef struct
 	GPIO_SwitchTypeDef	SwSpeed;
 	GPIO_SwitchTypeDef	SwLoop;
 }PlayerTypeDef;
+extern PlayerTypeDef Player;
 
 
+void LCD_CreateFrame(PlayerTypeDef *player);
 
+void Menu_Control_Init(PlayerTypeDef *player);
+void Menu_Control(PlayerTypeDef *player);
 
 #endif //MENU_LCD_H

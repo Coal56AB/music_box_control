@@ -12,8 +12,8 @@
 #include <stdio.h>
 #include "oled.h"
 
-#define Graph_Width 	128		//ширина дисплея в пикселях
-#define Graph_Height 	32		//высота дисплея в пикселях
+#define Graph_Width 	OLED_WIDTH		//ширина дисплея в пикселях
+#define Graph_Height 	OLED_HEIGHT		//высота дисплея в пикселях
 
 #define pxView_On	1		//закраска пикселя On
 #define pxView_Off	0		//закраска пикселя Off

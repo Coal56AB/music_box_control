@@ -20,6 +20,8 @@
 #define INCLUDE_GENERAL_PERIPH_LIBS
 //#define FREERTOS_DELAY
 
+#define SW_ON 	0
+#define SW_OFF 	1
 
 /** MYLIBS_CONFIG
   * @}
