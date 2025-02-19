@@ -12,8 +12,8 @@
 #include <stdio.h>
 #include "oled.h"
 
-#define Graph_Width 	OLED_WIDTH		//ширина дисплея в пикселях
-#define Graph_Height 	OLED_HEIGHT		//высота дисплея в пикселях
+#define Graph_Width 	128		//ширина дисплея в пикселях
+#define Graph_Height 	32		//высота дисплея в пикселях
 
 #define pxView_On	1		//закраска пикселя On
 #define pxView_Off	0		//закраска пикселя Off
@@ -25,7 +25,7 @@
 
 void Graph_Clean_Buffer_Frame(uint8_t *Buffer_Frame, uint32_t Buffer_Frame_Size);
 void Graph_Draw_Pixel(uint8_t *Buffer_Frame, uint8_t xPos, uint8_t yPos, uint8_t pxColor);
-void Graph_Inversion_Pos_Buffer_Frame(uint8_t *Buffer_Frame, uint16_t xPos_Start, uint16_t xPos_End);
+void Graph_Inversion_Pos_Buffer_Frame(uint8_t *Buffer_Frame, uint16_t xPos_Start, uint16_t yPos_Start, uint16_t width, uint16_t height);
 void Graph_Invertsion_RectangleArea(uint8_t *Buffer_Frame, uint8_t xPos_Start, uint8_t yPos_Start, uint8_t rectangle_Width, uint8_t rectangle_Height);
 
 void Graph_Draw_Char_1_Byte(uint8_t *Buffer_Frame, uint8_t xPos, uint8_t yPos, char Symbol, uint8_t Inversion);

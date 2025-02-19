@@ -1,5 +1,6 @@
 #include "menu_stuff.h"
 
+
 #define SPEED_SWITCH
 //#define SPEED_ANALOG
 
@@ -17,6 +18,7 @@ void Menu_Control_Init(PlayerTypeDef *player)
 
 void Menu_Control(PlayerTypeDef *player)
 {
+#ifdef GPIO_CONTROL
 	/* Обработка кнопки плей */
 	if(GPIO_Read_Swich(&player->SwPlay))
 	{
@@ -68,4 +70,6 @@ void Menu_Control(PlayerTypeDef *player)
 			player->speed = 0.75;
 		
 	}
+  
+#endif
 }

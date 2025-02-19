@@ -7,7 +7,7 @@ static uint16_t sequenceHalfStepSine[] = {0b0101, 0b0110, 0b1010, 0b1001};
 static float sin_table[128];
 
 
-HAL_StatusTypeDef STP_MotorInit(STP_MotorHandleTypeDef *motor, TIM_HandleTypeDef *htim, uint8_t totalSteps)
+HAL_StatusTypeDef STP_MotorInit(STP_MotorHandleTypeDef *motor, TIM_HandleTypeDef *htim, uint16_t totalSteps)
 {
 	if(motor == NULL)
 		return HAL_ERROR;
@@ -143,11 +143,11 @@ HAL_StatusTypeDef STP_SetMotorPins(STP_MotorHandleTypeDef *motor, GPIO_TypeDef *
 		return HAL_ERROR;
 	
 	
-	motor->GPIOs.GPIOx = gpiox;
-	motor->GPIOs.GPIO_PIN_X_APlus = pin_APlus;
-	motor->GPIOs.GPIO_PIN_X_AMinus = pin_AMinus;
-	motor->GPIOs.GPIO_PIN_X_BPlus = pin_BPlus;
-	motor->GPIOs.GPIO_PIN_X_BMinus = pin_BMinus;
+	motor->Outputs.GPIOx = gpiox;
+	motor->Outputs.GPIO_PIN_X_APlus = pin_APlus;
+	motor->Outputs.GPIO_PIN_X_AMinus = pin_AMinus;
+	motor->Outputs.GPIO_PIN_X_BPlus = pin_BPlus;
+	motor->Outputs.GPIO_PIN_X_BMinus = pin_BMinus;
 	
 	return HAL_OK;
 }
@@ -169,10 +169,10 @@ HAL_StatusTypeDef STP_SetMotorPins(STP_MotorHandleTypeDef *motor, TIM_HandleType
 			(IS_TIM_CHANNELS(channel_BMinus) == 0))
 		return HAL_ERROR;
   
-  motor->GPIOs.Channel_APlus = channel_APlus;
-  motor->GPIOs.Channel_AMinus = channel_AMinus;
-  motor->GPIOs.Channel_BPlus = channel_BPlus;
-  motor->GPIOs.Channel_BMinus = channel_BMinus;
+  motor->Outputs.Channel_APlus = channel_APlus;
+  motor->Outputs.Channel_AMinus = channel_AMinus;
+  motor->Outputs.Channel_BPlus = channel_BPlus;
+  motor->Outputs.Channel_BMinus = channel_BMinus;
   
   return HAL_OK;
 }
@@ -180,10 +180,10 @@ HAL_StatusTypeDef STP_SetMotorPins(STP_MotorHandleTypeDef *motor, TIM_HandleType
 HAL_StatusTypeDef STP_MotorStart(STP_MotorHandleTypeDef *motor)
 {
 #ifdef USE_PWM_TIM
-  HAL_TIM_PWM_Start(motor->htim, motor->GPIOs.Channel_APlus);
-  HAL_TIM_PWM_Start(motor->htim, motor->GPIOs.Channel_AMinus);
-  HAL_TIM_PWM_Start(motor->htim, motor->GPIOs.Channel_BPlus);
-  HAL_TIM_PWM_Start(motor->htim, motor->GPIOs.Channel_BMinus);
+  HAL_TIM_PWM_Start(motor->htim, motor->Outputs.Channel_APlus);
+  HAL_TIM_PWM_Start(motor->htim, motor->Outputs.Channel_AMinus);
+  HAL_TIM_PWM_Start(motor->htim, motor->Outputs.Channel_BPlus);
+  HAL_TIM_PWM_Start(motor->htim, motor->Outputs.Channel_BMinus);
 #endif
 	return HAL_TIM_Base_Start_IT(motor->htim);
 }
@@ -293,26 +293,19 @@ HAL_StatusTypeDef STP_MotorStep(STP_RotationHandleTypeDef *hrotor, STP_OutputsTy
       HAL_GPIO_WritePin(gpios->GPIOx, gpios->GPIO_PIN_X_BPlus, (step & (1<<2)) ? GPIO_PIN_SET : GPIO_PIN_RESET);	
       HAL_GPIO_WritePin(gpios->GPIOx, gpios->GPIO_PIN_X_BMinus, (step & (1<<3)) ? GPIO_PIN_SET : GPIO_PIN_RESET);
     }
-	}
-	else
-	{
-		HAL_GPIO_WritePin(gpios->GPIOx, gpios->GPIO_PIN_X_APlus, GPIO_PIN_RESET);	
-		HAL_GPIO_WritePin(gpios->GPIOx, gpios->GPIO_PIN_X_AMinus, GPIO_PIN_RESET);	
-		HAL_GPIO_WritePin(gpios->GPIOx, gpios->GPIO_PIN_X_BPlus, GPIO_PIN_RESET);		
-		HAL_GPIO_WritePin(gpios->GPIOx, gpios->GPIO_PIN_X_BMinus, GPIO_PIN_RESET);
-	}
 
 	
-	if(hrotor->direction)
-	{
-		hrotor->stepCount--;
+    if(hrotor->direction)
+    {
+      hrotor->stepCount--;
+    }
+    else
+    {
+      hrotor->stepCount++;
+    }
+    
+    hrotor->stepCount %= hrotor->sequenceSize;
 	}
-	else
-	{
-		hrotor->stepCount++;
-	}
-	
-	hrotor->stepCount %= hrotor->sequenceSize;
 	return HAL_OK;
 }
 #endif //USE_GPIO_PORTS
@@ -381,18 +374,8 @@ HAL_StatusTypeDef STP_MotorStep(STP_RotationHandleTypeDef *hrotor, TIM_HandleTyp
       __HAL_TIM_SET_COMPARE(htim, channels->Channel_BPlus, (step & (1<<2)) ? __HAL_TIM_GET_AUTORELOAD(htim) : 0);
       __HAL_TIM_SET_COMPARE(htim, channels->Channel_BMinus, (step & (1<<3)) ? __HAL_TIM_GET_AUTORELOAD(htim) : 0);
     }
-	}
-	else
-	{
-    __HAL_TIM_SET_COMPARE(htim, channels->Channel_APlus, 0);
-    __HAL_TIM_SET_COMPARE(htim, channels->Channel_AMinus, 0);
-    __HAL_TIM_SET_COMPARE(htim, channels->Channel_BPlus, 0);
-    __HAL_TIM_SET_COMPARE(htim, channels->Channel_BMinus, 0);
-	}
-
-	
-	if(hrotor->stopFlag == 0)
-	{
+    
+    
     if(hrotor->microStepping == 0)
     {
       if(hrotor->direction)
@@ -428,6 +411,7 @@ HAL_StatusTypeDef STP_MotorStep(STP_RotationHandleTypeDef *hrotor, TIM_HandleTyp
 
 HAL_StatusTypeDef STP_MotorHandleTIM(STP_MotorHandleTypeDef *motor)
 {
+  static uint8_t prev_stepcount = 0;
 	if(motor == NULL)
 		return HAL_ERROR;
 	
@@ -448,31 +432,63 @@ HAL_StatusTypeDef STP_MotorHandleTIM(STP_MotorHandleTypeDef *motor)
 	if(motor->frequency != 0)
   {
 #ifdef USE_GPIO_PORTS
-		STP_MotorStep(&motor->rhandle, &motor->GPIOs);
+		STP_MotorStep(&motor->rhandle, &motor->Outputs);
 #endif
 #ifdef USE_PWM_TIM
-		STP_MotorStep(&motor->rhandle, motor->htim, &motor->GPIOs, motor->mode);
+		STP_MotorStep(&motor->rhandle, motor->htim, &motor->Outputs, motor->mode);
 #endif
+  }
+  if(motor->rhandle.stopFlag == 1)
+  {
+    Service_StopMotor(motor);
+  }
+  
+  if(prev_stepcount != motor->rhandle.stepCount)
+  {
+    float step = 1.0/motor->mode;
+    
+    if(motor->rhandle.microStepping != 0)
+      step /= motor->rhandle.microStepping;    
+    
+    if(motor->rhandle.direction == 0)
+      motor->rhandle.currentStep += step;
+    else
+      motor->rhandle.currentStep -= step;
+    
+    
+    
+    if(motor->rhandle.currentStep > motor->rhandle.totalSteps)
+      motor->rhandle.currentStep = 0;
+    else if(motor->rhandle.currentStep < 0)
+      motor->rhandle.currentStep = motor->rhandle.totalSteps;
+    
+    motor->rhandle.goFlag = 1;  
   }
   else
   {
-#ifdef USE_GPIO_PORTS
-		HAL_GPIO_WritePin(motor->GPIOs.GPIOx, motor->GPIOs.GPIO_PIN_X_APlus, GPIO_PIN_RESET);	
-		HAL_GPIO_WritePin(motor->GPIOs.GPIOx, motor->GPIOs.GPIO_PIN_X_AMinus, GPIO_PIN_RESET);	
-		HAL_GPIO_WritePin(motor->GPIOs.GPIOx, motor->GPIOs.GPIO_PIN_X_BPlus, GPIO_PIN_RESET);		
-		HAL_GPIO_WritePin(motor->GPIOs.GPIOx, motor->GPIOs.GPIO_PIN_X_BMinus, GPIO_PIN_RESET);
-#endif
-#ifdef USE_PWM_TIM
-    __HAL_TIM_SET_COMPARE(motor->htim, TIM_CHANNEL_1, 0);
-    __HAL_TIM_SET_COMPARE(motor->htim, TIM_CHANNEL_2, 0);
-    __HAL_TIM_SET_COMPARE(motor->htim, TIM_CHANNEL_3, 0);
-    __HAL_TIM_SET_COMPARE(motor->htim, TIM_CHANNEL_4, 0);
-#endif
+    motor->rhandle.goFlag = 0;  
   }
+  prev_stepcount = motor->rhandle.stepCount;
 	
 	return HAL_OK;
 }
 
+
+static void Service_StopMotor(STP_MotorHandleTypeDef *motor)
+{
+#ifdef USE_GPIO_PORTS
+		HAL_GPIO_WritePin(motor->Outputs.GPIOx, motor->Outputs.GPIO_PIN_X_APlus, GPIO_PIN_RESET);	
+		HAL_GPIO_WritePin(motor->Outputs.GPIOx, motor->Outputs.GPIO_PIN_X_AMinus, GPIO_PIN_RESET);	
+		HAL_GPIO_WritePin(motor->Outputs.GPIOx, motor->Outputs.GPIO_PIN_X_BPlus, GPIO_PIN_RESET);		
+		HAL_GPIO_WritePin(motor->Outputs.GPIOx, motor->Outputs.GPIO_PIN_X_BMinus, GPIO_PIN_RESET);
+#endif
+#ifdef USE_PWM_TIM
+    __HAL_TIM_SET_COMPARE(motor->htim, motor->Outputs.Channel_APlus, 0);
+    __HAL_TIM_SET_COMPARE(motor->htim, motor->Outputs.Channel_AMinus, 0);
+    __HAL_TIM_SET_COMPARE(motor->htim, motor->Outputs.Channel_BPlus, 0);
+    __HAL_TIM_SET_COMPARE(motor->htim, motor->Outputs.Channel_BMinus, 0);
+#endif
+}
 
 static HAL_StatusTypeDef Service_SetMotorFrequency(STP_MotorHandleTypeDef *motor, float Speed)
 {

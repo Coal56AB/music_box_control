@@ -183,17 +183,8 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
-  /* USER CODE BEGIN SysTick_IRQn 0 */
-	static uint32_t oled_prevtick = 0;
-	uint32_t oled_period = 100;
-	
-	Menu_Control(&musicbox.player);
-	
-	if(uwTick - oled_prevtick > oled_period)
-	{
-		oled_prevtick = uwTick;
-		LCD_CreateFrame(&musicbox.player);
-	}
+  /* USER CODE BEGIN SysTick_IRQn 0 */	
+	Menu_Control(&musicbox.player);	
   /* USER CODE END SysTick_IRQn 0 */
   HAL_IncTick();
   /* USER CODE BEGIN SysTick_IRQn 1 */

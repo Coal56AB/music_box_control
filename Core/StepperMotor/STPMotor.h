@@ -55,8 +55,10 @@ typedef struct
 	uint8_t 	stepCount;
 	
 	unsigned	stopFlag;
+	unsigned	goFlag;
 	unsigned	forceStopFlag;
 	
+	float     currentStep;
 }STP_RotationHandleTypeDef;
 
 
@@ -106,14 +108,14 @@ typedef struct
 	
 	STP_RotationHandleTypeDef  	rhandle;
   
-	STP_OutputsTypeDef					GPIOs;
+	STP_OutputsTypeDef					Outputs;
 	
 }STP_MotorHandleTypeDef;
 
 
 
 HAL_StatusTypeDef STP_MotorStart(STP_MotorHandleTypeDef *motor);
-HAL_StatusTypeDef STP_MotorInit(STP_MotorHandleTypeDef *motor, TIM_HandleTypeDef *htim, uint8_t totalSteps);
+HAL_StatusTypeDef STP_MotorInit(STP_MotorHandleTypeDef *motor, TIM_HandleTypeDef *htim, uint16_t totalSteps);
 HAL_StatusTypeDef STP_SetMotorMode(STP_MotorHandleTypeDef *motor, STP_MotorModeTypeDef ControlMode, uint8_t microsteps);
 HAL_StatusTypeDef STP_SetMotorMicrosteps(STP_MotorHandleTypeDef *motor, uint8_t microsteps);
 HAL_StatusTypeDef STP_SetMotorPIDParams(STP_MotorHandleTypeDef *motor, float Kp, float Ki, float Kd);
@@ -137,6 +139,7 @@ HAL_StatusTypeDef STP_MotorStep(STP_RotationHandleTypeDef *hrotor, TIM_HandleTyp
 
 HAL_StatusTypeDef STP_MotorHandleTIM(STP_MotorHandleTypeDef *motor);
 
+static void Service_StopMotor(STP_MotorHandleTypeDef *motor);
 static void Service_SetMotorMode(STP_MotorHandleTypeDef *motor);
 static HAL_StatusTypeDef Service_SetMotorFrequency(STP_MotorHandleTypeDef *motor, float Speed);
 static void Service_Ramp_ControlValue(STP_PIDHandleTypeDef *hramp, float *PID_Output);

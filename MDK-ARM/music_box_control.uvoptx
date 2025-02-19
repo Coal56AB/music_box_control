@@ -175,12 +175,37 @@
           <WinNumber>1</WinNumber>
           <ItemText>Player.SwSpeed</ItemText>
         </Ww>
+        <Ww>
+          <count>5</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>buff_speed</ItemText>
+        </Ww>
+        <Ww>
+          <count>6</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>player-&gt;speed</ItemText>
+        </Ww>
+        <Ww>
+          <count>7</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>period,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>8</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>period/4096,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>9</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>period/4096/2,0x0A</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
           <count>0</count>
           <WinNumber>2</WinNumber>
-          <ItemText>musicbox</ItemText>
+          <ItemText>musicbox,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>1</count>
@@ -196,6 +221,16 @@
           <count>3</count>
           <WinNumber>2</WinNumber>
           <ItemText>motormode,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>4</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>uwTick,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>5</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>y * 128/8+xPos_Start</ItemText>
         </Ww>
       </WatchWindow2>
       <Tracepoint>

@@ -46,12 +46,21 @@ void Graph_Draw_Pixel(uint8_t *Buffer_Frame, uint8_t xPos, uint8_t yPos, uint8_t
 	}
 }
 
-/* функция инверсии любой точки в буфере кадра */
-void Graph_Inversion_Pos_Buffer_Frame(uint8_t *Buffer_Frame, uint16_t xPos_Start, uint16_t xPos_End)
+/* функция инверсии любой области в буфере кадра */
+void Graph_Inversion_Pos_Buffer_Frame(uint8_t *Buffer_Frame, uint16_t xPos_Start, uint16_t yPos_Start, uint16_t width, uint16_t height)
 {
-	for (; xPos_Start < xPos_End; xPos_Start++)
+  if ((xPos_Start+width >= Graph_Width)||(xPos_Start < 0)||(yPos_Start+ height>= Graph_Height)||(yPos_Start < 0))
 	{
-		Buffer_Frame[xPos_Start] = ~(Buffer_Frame[xPos_Start]);
+		//если значения по x и y больше пределов то выходим из функции
+		return;
+	}
+	for (uint16_t xPos = xPos_Start; xPos < xPos_Start + width; xPos++)
+	{            
+    for(uint16_t yPos = yPos_Start; yPos < yPos_Start + height; yPos++)
+    {
+      uint16_t arrayPos = xPos + ((yPos/8)*Graph_Width);
+      Buffer_Frame[arrayPos] ^= (1 << (yPos % 8)); // Инвертируем бит, отвечающий за пиксель      
+    }    
 	}
 }
 
@@ -407,8 +416,8 @@ void Graph_Draw_Arc(uint8_t *Buffer_Frame, uint8_t xPos, uint8_t yPos, uint8_t r
 	int yPos_tmp = 0;
 	for (int angle = startAngle; angle <= endAngle; angle++)
 	{
-			xPos_tmp = xPos + (radius * cosf(angle * 3.14159 / 180));
-			yPos_tmp = yPos + (radius * sinf(angle * 3.14159 / 180));
+			xPos_tmp = roundf(xPos + (radius * cosf(angle * 3.14159 / 180)));
+			yPos_tmp = roundf(yPos + (radius * sinf(angle * 3.14159 / 180)));
 			Graph_Draw_Pixel(Buffer_Frame, xPos_tmp, yPos_tmp, pxColor);
 	}
 }
@@ -416,15 +425,29 @@ void Graph_Draw_Arc(uint8_t *Buffer_Frame, uint8_t xPos, uint8_t yPos, uint8_t r
 /* Функция инвертирования прямоугольной области */
 void Graph_Invertsion_RectangleArea(uint8_t *Buffer_Frame, uint8_t xPos_Start, uint8_t yPos_Start, uint8_t rectangle_Width, uint8_t rectangle_Height)
 {
-	// Пройдем по всем строкам прямоугольника
-	for (uint16_t y = yPos_Start; y < yPos_Start + rectangle_Height; y++)
-	{
-			// Вычислим начальный и конечный индекс для данной строки
-			uint16_t xStartPos = y * Graph_Width/8 + xPos_Start;
-			uint16_t xEndPos = y * Graph_Width/8 + xPos_Start + rectangle_Width;
+  Graph_Inversion_Pos_Buffer_Frame(Buffer_Frame, xPos_Start, yPos_Start, rectangle_Width, rectangle_Height);
+  
+//	// Пройдем по всем строкам прямоугольника
+//	for (uint16_t y = yPos_Start; y < yPos_Start + 2; y++)
+//	{
+//			// Вычислим начальный и конечный индекс для данной строки
+//			uint16_t xStartPos = y * Graph_Width/8 + xPos_Start;
+//			uint16_t xEndPos = xStartPos + rectangle_Height;
 
-			// Инвертируем пиксели в данной строке
-			Graph_Inversion_Pos_Buffer_Frame(Buffer_Frame, xStartPos, xEndPos);
-	}
+//			// Инвертируем пиксели в данной строке
+//			Graph_Inversion_Pos_Buffer_Frame(Buffer_Frame, xStartPos, xStartPos+1);
+//	}
 	
+  
+//  // Пройдем по всем столбцам прямоугольника
+//  for (uint16_t x = xPos_Start; x < xPos_Start + 1; x++)
+//  {
+//      // Вычислим начальный и конечный индекс для данного столбца
+//      uint16_t yStartPos = x * Graph_Height/8 + yPos_Start;
+//      uint16_t yEndPos = yStartPos + rectangle_Height;
+
+//      // Инвертируем пиксели в данном столбце
+//      Graph_Inversion_Pos_Buffer_Frame(Buffer_Frame, yStartPos, yEndPos);
+//  }
+
 }
