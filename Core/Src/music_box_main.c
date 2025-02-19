@@ -22,7 +22,7 @@ void music_box_init(void)
 #ifdef USE_PWM_TIM
 	STP_SetMotorPins(&musicbox.motor, &htim1, TIM_CHANNEL_1, TIM_CHANNEL_3, TIM_CHANNEL_2, TIM_CHANNEL_4);	
 #endif
-	STP_SetMotorMode(&musicbox.motor, STP_MODE_HALF_STEP, 16);
+	STP_SetMotorMode(&musicbox.motor, STP_MODE_HALF_STEP, 0); 
 	STP_MotorInit(&musicbox.motor, &htim1, 200);
 	STP_MotorStart(&musicbox.motor);
 	oled_init();
@@ -30,8 +30,8 @@ void music_box_init(void)
   musicbox.player.play = 1;
 }
 
-uint8_t microsteps = 128;
-STP_MotorModeTypeDef motormode = STP_MODE_FULL_STEP;
+uint8_t microsteps = 16;
+STP_MotorModeTypeDef motormode = STP_MODE_HALF_STEP;
 static float prevstep = 0;
 void music_box_main(void)
 {	
@@ -71,11 +71,6 @@ void music_box_main(void)
 		{
 			musicbox.freq = SPEED_1_MOTOR_FREQ*musicbox.player.speed;
 			musicbox.motor.hramp.pid_disable = 1;
-			
-			if(musicbox.freq <= FREQ_MICROSTEP_THRESHOLD)
-				STP_SetMotorMode(&musicbox.motor, motormode, microsteps);
-			else
-				STP_SetMotorMode(&musicbox.motor, STP_MODE_HALF_STEP, 0);
 		}
 	}
 	else
@@ -92,7 +87,6 @@ void music_box_main(void)
       musicbox.freq = -SPEED_1_MOTOR_FREQ;
       musicbox.motor.hramp.pid_disable = 0;
       musicbox.motor.hramp.pid.Ki = 0.02;
-      STP_SetMotorMode(&musicbox.motor, STP_MODE_HALF_STEP, 0);
     }
     else
     {
@@ -106,10 +100,18 @@ void music_box_main(void)
     musicbox.freq = SPEED_MAX_MOTOR_FREQ;
     musicbox.motor.hramp.pid_disable = 0;
     musicbox.motor.hramp.pid.Ki = 0.02;
-    STP_SetMotorMode(&musicbox.motor, STP_MODE_HALF_STEP, 0);
   }
 	
-	STP_SetMotorFrequency(&musicbox.motor, musicbox.freq);
+  // выставление микрошага режима если требуется
+  if(musicbox.freq != 0)
+  {
+    if(fabs(musicbox.motor.frequency) <= FREQ_MICROSTEP_THRESHOLD)
+      STP_SetMotorMode(&musicbox.motor, motormode, microsteps);
+    else
+      STP_SetMotorMode(&musicbox.motor, STP_MODE_HALF_STEP, 0);    
+  }
+  
+  STP_SetMotorFrequency(&musicbox.motor, musicbox.freq);
   
   
   

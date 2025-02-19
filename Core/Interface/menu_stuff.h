@@ -14,48 +14,51 @@
 #define displaycenter_x		(62)
 #define displaycenter_y		(18)
 
-#define circle_stopplay_x_shift	(0)
-#define circle_stopplay_y_shift	(2)
 
-#define  circle_stopplay_x		(displaycenter_x + circle_stopplay_x_shift)
-#define  circle_stopplay_y		(displaycenter_y + circle_stopplay_y_shift)
-#define  circle_stopplay_r		(9)
+#define control_panel_y_shift   (2)
+#define control_panel_y_height  (8)
+#define control_panel_y_mid     (displaycenter_y + control_panel_y_shift)
+#define control_panel_y_up      (control_panel_y_mid - (control_panel_y_height/2))
+#define control_panel_y_down    (control_panel_y_mid + (control_panel_y_height/2))
 
-#define	 play_icon_x_shift		(3)
-#define	 play_icon_y_size			(8)
+//#define circle_stopplay_x_shift	(0)
+//#define circle_stopplay_y_shift	(2)
 
-#define	 play_icon_x_left			(circle_stopplay_x - play_icon_x_shift)
-#define	 play_icon_x_rigth		(circle_stopplay_x + play_icon_x_shift)
-#define	 play_icon_y_up				(circle_stopplay_y - (play_icon_y_size/2))
-#define	 play_icon_y_down			(circle_stopplay_y + (play_icon_y_size/2))
-#define	 play_icon_y_mid			(circle_stopplay_y)
+//#define  circle_stopplay_x		(displaycenter_x + circle_stopplay_x_shift)
+//#define  circle_stopplay_y		(displaycenter_y + circle_stopplay_y_shift)
+//#define  circle_stopplay_r		(9)
+
+#define	 play_icon_x_widht		(3)
+#define	 play_icon_y_size			control_panel_y_height//(8)
+
+#define	 play_icon_x_left			(displaycenter_x - play_icon_x_widht)
+#define	 play_icon_x_rigth		(displaycenter_x + play_icon_x_widht)
+#define	 play_icon_y_up				(control_panel_y_up)
+#define	 play_icon_y_down			(control_panel_y_down)
+#define	 play_icon_y_mid			(control_panel_y_mid)
 
 
-#define	 forward_backward_icon_x_shift	(15)
+#define	 forward_backward_icon_x_shift	(18)
 
 
 #define	 forward_icon_x_left	(play_icon_x_left + forward_backward_icon_x_shift)
 #define	 forward_icon_x_rigth	(play_icon_x_rigth + forward_backward_icon_x_shift+3)
-#define	 forward_icon_y_up		(play_icon_y_up)
-#define	 forward_icon_y_down	(play_icon_y_down)
-#define	 forward_icon_y_mid		(play_icon_y_mid)
+#define	 forward_icon_y_up		(control_panel_y_up)
+#define	 forward_icon_y_down	(control_panel_y_down)
+#define	 forward_icon_y_mid		(control_panel_y_mid)
 
 #define	 backward_icon_x_left	(play_icon_x_left - forward_backward_icon_x_shift-3)
 #define	 backward_icon_x_rigth (play_icon_x_rigth - forward_backward_icon_x_shift)
-#define	 backward_icon_y_up		(play_icon_y_up)
-#define	 backward_icon_y_down	(play_icon_y_down)
-#define	 backward_icon_y_mid	(play_icon_y_mid)
+#define	 backward_icon_y_up		(control_panel_y_up)
+#define	 backward_icon_y_down	(control_panel_y_down)
+#define	 backward_icon_y_mid	(control_panel_y_mid)
 
 
 #define  speed_x_shift			(39)
 #define  speed_y_shift			(-3)
-#define  speed_x_width			(24)
 
 #define  speed_x_cursore					(displaycenter_x+speed_x_shift)
 #define  speed_y_cursore					(displaycenter_y+speed_y_shift)
-#define  speed_underline_x_left		(speed_x_cursore-1)
-#define  speed_underline_x_rigth	(speed_underline_x_left+speed_x_width)
-#define  speed_underline_y				(speed_y_cursore+font_size)
 
 #define  loop_icon_x_shift	(speed_x_shift+3)
 #define  loop_icon_y_shift	(-2)

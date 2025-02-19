@@ -6,7 +6,7 @@
 #define SPEED_1_MOTOR_FREQ			((float)1.8)//1.742)
 #define SPEED_MAX_MOTOR_FREQ		((float)3.5)
 #define ROTATIONS_FULL_MELODY	  ((float)10)
-#define FREQ_MICROSTEP_THRESHOLD ((float)0)
+#define FREQ_MICROSTEP_THRESHOLD ((float)0.5)
 
 typedef struct
 {

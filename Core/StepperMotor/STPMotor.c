@@ -491,13 +491,7 @@ static void Service_StopMotor(STP_MotorHandleTypeDef *motor)
 }
 
 static HAL_StatusTypeDef Service_SetMotorFrequency(STP_MotorHandleTypeDef *motor, float Speed)
-{
-	static float speed_prev = 0;
-	
-	if(speed_prev == Speed)
-		return HAL_OK;  
-	speed_prev = Speed;
-  
+{  
 	if(Speed > 0)
 		motor->rhandle.direction = 0;
 	else
