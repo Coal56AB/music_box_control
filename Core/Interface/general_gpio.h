@@ -34,9 +34,9 @@ typedef struct
   uint32_t      Sw_Pin;
   
   uint8_t       Sw_ActiveLvl;
-  uint32_t      Sw_PrevState;
+  uint32_t      Sw_State;
   uint32_t      Sw_FilterDelay;
-  uint32_t      Sw_GrandPrevState;
+  uint32_t      Sw_PrevState;
   uint32_t      tickprev;
 }GPIO_SwitchTypeDef;
 

@@ -237,11 +237,12 @@ uint8_t GPIO_Read_Swich(GPIO_SwitchTypeDef *sw)
 {
   if(check_null_ptr_1(sw))
     return 0;
-  
-	sw->Sw_GrandPrevState = sw->Sw_PrevState;
+ 
+//	if(sw->tickprev == 0)
+	sw->Sw_PrevState = sw->Sw_State;
+	
   if(HAL_GPIO_ReadPin(sw->Sw_Port, sw->Sw_Pin) == sw->Sw_ActiveLvl)
   {
-    sw->Sw_PrevState = 1;
     
     if(sw->tickprev == 0)
       sw->tickprev = HAL_GetTick();
@@ -250,18 +251,21 @@ uint8_t GPIO_Read_Swich(GPIO_SwitchTypeDef *sw)
     {
       if(HAL_GPIO_ReadPin(sw->Sw_Port, sw->Sw_Pin) == sw->Sw_ActiveLvl)
       {
+				sw->Sw_State = 1;
         return 1;
       }
       else
       {
         sw->tickprev = 0;
+				sw->Sw_State = 0;
         return 0;
       }
     }
   }
   else
   {
-    sw->Sw_PrevState = 0;
+		sw->tickprev = 0;
+    sw->Sw_State = 0;
   }
   return 0;
 }

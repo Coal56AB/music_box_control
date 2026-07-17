@@ -1,6 +1,6 @@
 #include "menu_stuff.h"
 
-static int menu_white_theme = 0;
+int menu_white_theme = 0;
 
 void Graph_Draw_LoopIcon(uint8_t *Buffer_Frame, uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t pxColor);
 
@@ -36,14 +36,14 @@ void LCD_CreateFrame(PlayerTypeDef *player)
 	// перемотка вперед
   Graph_Draw_Triangle(oled_buf, forward_icon_x_left, forward_icon_y_up, forward_icon_x_left, forward_icon_y_down, forward_icon_x_rigth-1, forward_icon_y_mid, 1);
   Graph_Draw_Line(oled_buf, forward_icon_x_rigth, forward_icon_y_up, forward_icon_x_rigth, forward_icon_y_down, 1);
-	if(player->press_forward)
+	if(player->pressed_forward)
 		Graph_Invertsion_RectangleArea(oled_buf, forward_icon_x_left-selected_width, forward_icon_y_up-selected_width, forward_icon_x_rigth-forward_icon_x_left+2*selected_width+1, forward_icon_y_down-forward_icon_y_up+2*selected_width+1);
 		
 		
 	// перемотка назад
 	Graph_Draw_Triangle(oled_buf, backward_icon_x_rigth, backward_icon_y_up, backward_icon_x_rigth, backward_icon_y_down, backward_icon_x_left+1, backward_icon_y_mid, 1);
 	Graph_Draw_Line(oled_buf, backward_icon_x_left, backward_icon_y_up, backward_icon_x_left, backward_icon_y_down, 1);
-	if(player->press_backward)
+	if(player->pressed_backward)
 		Graph_Invertsion_RectangleArea(oled_buf, backward_icon_x_left-selected_width, backward_icon_y_up-selected_width, backward_icon_x_rigth-(backward_icon_x_left)+2*selected_width+1, backward_icon_y_down-backward_icon_y_up+2*selected_width+1);
 	
 	// индикация скорости

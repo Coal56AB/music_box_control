@@ -24,13 +24,13 @@ HAL_StatusTypeDef STP_MotorInit(STP_MotorHandleTypeDef *motor, TIM_HandleTypeDef
 }
 
 
-HAL_StatusTypeDef STP_SetMotorMode(STP_MotorHandleTypeDef *motor, STP_MotorModeTypeDef ControlMode, uint8_t microsteps)
+HAL_StatusTypeDef STP_SetMotorMode(STP_MotorHandleTypeDef *motor, STP_MotorModeTypeDef ControlMode, uint8_t finesteps)
 {
 	if(motor == NULL)
 		return HAL_ERROR;
 	
-	if(microsteps != 0)
-		STP_SetMotorMicrosteps(motor, microsteps);
+	if(finesteps != 0)
+		STP_SetMotorMicrosteps(motor, finesteps);
 	else
 		motor->rhandle.microStepping = 0;
 	
@@ -41,14 +41,14 @@ HAL_StatusTypeDef STP_SetMotorMode(STP_MotorHandleTypeDef *motor, STP_MotorModeT
   return HAL_OK;
 }
 
-HAL_StatusTypeDef STP_SetMotorMicrosteps(STP_MotorHandleTypeDef *motor, uint8_t microsteps)
+HAL_StatusTypeDef STP_SetMotorMicrosteps(STP_MotorHandleTypeDef *motor, uint8_t finesteps)
 {
 	if(motor == NULL)
 		return HAL_ERROR;
-  if(IS_MICROSTEP_VALID(microsteps) == 0)
+  if(IS_MICROSTEP_VALID(finesteps) == 0)
     return HAL_ERROR;
   
-  motor->rhandle.microStepping = microsteps;
+  motor->rhandle.microStepping = finesteps;
   	
   // Заполнение первой половины от 0 до 1
 	uint32_t half_steps = motor->rhandle.microStepping / 2;
@@ -419,6 +419,7 @@ HAL_StatusTypeDef STP_MotorHandleTIM(STP_MotorHandleTypeDef *motor)
 	
 	Service_IsPIDInitialized(&motor->hramp);
   motor->hramp.SampleT = (float)(motor->htim->Instance->PSC+1)*(motor->htim->Instance->ARR+1)/SystemCoreClock;
+	
 	if(motor->hramp.pid_initialized && motor->hramp.pid_disable == 0)
 		Service_Ramp_ControlValue(&motor->hramp, &motor->frequency);
 	else
@@ -447,8 +448,8 @@ HAL_StatusTypeDef STP_MotorHandleTIM(STP_MotorHandleTypeDef *motor)
   {
     float step = 1.0/motor->mode;
     
-    if(motor->rhandle.microStepping != 0)
-      step /= motor->rhandle.microStepping;    
+//    if(motor->rhandle.microStepping != 0)
+//      step /= motor->rhandle.microStepping;    
     
     if(motor->rhandle.direction == 0)
       motor->rhandle.currentStep += step;
@@ -458,9 +459,9 @@ HAL_StatusTypeDef STP_MotorHandleTIM(STP_MotorHandleTypeDef *motor)
     
     
     if(motor->rhandle.currentStep > motor->rhandle.totalSteps)
-      motor->rhandle.currentStep = 0;
+      motor->rhandle.currentStep -= motor->rhandle.totalSteps;
     else if(motor->rhandle.currentStep < 0)
-      motor->rhandle.currentStep = motor->rhandle.totalSteps;
+      motor->rhandle.currentStep += motor->rhandle.totalSteps;
     
     motor->rhandle.goFlag = 1;  
   }
@@ -554,11 +555,13 @@ static void Service_SetMotorMode(STP_MotorHandleTypeDef *motor)
       {
         if(motor->rhandle.microStepping)
         {
+#ifdef USE_PWM_TIM
           increment_cnt = 0;
           microstep_cnt1 = 0;
           microstep_cnt2 = 0;
           microstep_cnt3 = 0;
           microstep_cnt4 = 0;
+#endif
           motor->rhandle.stepCount = 0;
         }
       }
@@ -576,11 +579,13 @@ static void Service_SetMotorMode(STP_MotorHandleTypeDef *motor)
         motor->rhandle.stepSequence = sequenceHalfStepSine;
         if(motor->mode != mode_shdw)
         {
+#ifdef USE_PWM_TIM
           increment_cnt = 0;
           microstep_cnt1 = motor->rhandle.microStepping/2;
           microstep_cnt2 = 0;
           microstep_cnt3 = 0;
           microstep_cnt4 = 0;
+#endif
           motor->rhandle.stepCount = 0;
         }
       }

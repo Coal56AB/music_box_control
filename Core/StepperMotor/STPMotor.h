@@ -10,14 +10,17 @@
 
 
 #define STP_GET_TIM_CLK_FREQ(_htim_) (SystemCoreClock/(_htim_->Instance->PSC+1))		
+//#define IS_MICROSTEP_VALID(_microstp_)  \
+//(((int)(_microstp_) == 2) || \
+// ((int)(_microstp_) == 4) || \
+// ((int)(_microstp_) == 8) || \
+// ((int)(_microstp_) == 16) || \
+// ((int)(_microstp_) == 32) || \
+// ((int)(_microstp_) == 64) || \
+// ((int)(_microstp_) == 128))
 #define IS_MICROSTEP_VALID(_microstp_)  \
-(((int)(_microstp_) == 2) || \
- ((int)(_microstp_) == 4) || \
- ((int)(_microstp_) == 8) || \
- ((int)(_microstp_) == 16) || \
- ((int)(_microstp_) == 32) || \
- ((int)(_microstp_) == 64) || \
- ((int)(_microstp_) == 128))
+(((int)(_microstp_) > 0) && \
+ ((int)(_microstp_) % 2 == 0) )
 
 /** 
 	* @brief 	Handle for ramp.
@@ -116,8 +119,8 @@ typedef struct
 
 HAL_StatusTypeDef STP_MotorStart(STP_MotorHandleTypeDef *motor);
 HAL_StatusTypeDef STP_MotorInit(STP_MotorHandleTypeDef *motor, TIM_HandleTypeDef *htim, uint16_t totalSteps);
-HAL_StatusTypeDef STP_SetMotorMode(STP_MotorHandleTypeDef *motor, STP_MotorModeTypeDef ControlMode, uint8_t microsteps);
-HAL_StatusTypeDef STP_SetMotorMicrosteps(STP_MotorHandleTypeDef *motor, uint8_t microsteps);
+HAL_StatusTypeDef STP_SetMotorMode(STP_MotorHandleTypeDef *motor, STP_MotorModeTypeDef ControlMode, uint8_t finesteps);
+HAL_StatusTypeDef STP_SetMotorMicrosteps(STP_MotorHandleTypeDef *motor, uint8_t finesteps);
 HAL_StatusTypeDef STP_SetMotorPIDParams(STP_MotorHandleTypeDef *motor, float Kp, float Ki, float Kd);
 HAL_StatusTypeDef STP_SetMotorLimits(STP_MotorHandleTypeDef *motor, float speedMax, float speedMin, float acceleration, float slowdown);
 #ifdef USE_GPIO_PORTS

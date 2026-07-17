@@ -183,8 +183,10 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
-  /* USER CODE BEGIN SysTick_IRQn 0 */	
+  /* USER CODE BEGIN SysTick_IRQn 0 */
 	Menu_Control(&musicbox.player);	
+//	if(musicbox.initialized)
+//		music_box_main();
   /* USER CODE END SysTick_IRQn 0 */
   HAL_IncTick();
   /* USER CODE BEGIN SysTick_IRQn 1 */

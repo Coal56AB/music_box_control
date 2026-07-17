@@ -21,13 +21,6 @@
 #define control_panel_y_up      (control_panel_y_mid - (control_panel_y_height/2))
 #define control_panel_y_down    (control_panel_y_mid + (control_panel_y_height/2))
 
-//#define circle_stopplay_x_shift	(0)
-//#define circle_stopplay_y_shift	(2)
-
-//#define  circle_stopplay_x		(displaycenter_x + circle_stopplay_x_shift)
-//#define  circle_stopplay_y		(displaycenter_y + circle_stopplay_y_shift)
-//#define  circle_stopplay_r		(9)
-
 #define	 play_icon_x_widht		(3)
 #define	 play_icon_y_size			control_panel_y_height//(8)
 
@@ -70,7 +63,8 @@
 
 #define  selected_width           (1)
 
-
+#define GPIO_SwTheme						SW_THEME_GPIO_Port
+#define GPIO_Pin_SwTheme				SW_THEME_Pin
 
 #define GPIO_SwSpeed						SW_SPEED_GPIO_Port
 #define GPIO_Pin_SwSpeed				SW_SPEED_Pin
@@ -92,12 +86,15 @@ typedef struct
 	unsigned 	play:1;
 	unsigned 	loop:1;
 	unsigned 	pressed_start:1;
-	unsigned 	press_forward:1;
-	unsigned 	press_backward:1;
+	unsigned 	pressed_forward:1;
+	unsigned 	pressed_backward:1;
+	unsigned 	pressed_loop:1;
+	unsigned 	pressed_speed:1;
 	float			currenttime;
 	float			speed;
 	
 	
+	GPIO_SwitchTypeDef	SwTheme;
 	GPIO_SwitchTypeDef	SwPlay;
 	GPIO_SwitchTypeDef	SwForward;
 	GPIO_SwitchTypeDef	SwBackward;
